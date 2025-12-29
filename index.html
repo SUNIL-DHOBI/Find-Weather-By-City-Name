@@ -4,99 +4,161 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather App</title>
+    <link rel="stylesheet" href="./src/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="../../node_modules/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
     <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.js"></script>
 
-    <script>
+    <!-- <script>
         
 
-        function SearchClick(){
-            const DEFAULT_CITY = "Hyderabad";
 
-            window.onload = function () {
-            fetchWeather(DEFAULT_CITY);
-            };
-            let now = new Date(); 
+        function SearchClick(){            
             var cityName = document.getElementById("txtCity").value;
-
             var API_URL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=15aad834f32af2b89c51be0769b1661d&units=metric`;
             fetch (API_URL)
             .then(function(response){
                 return response.json();
             })
             .then(function(weatherObj){
-                document.getElementById("temprature").innerHTML= `${weatherObj.main.temp}&deg;C<br>${weatherObj.weather[0].description.toUpperCase()}`
-                document.getElementById("lblCity").innerHTML = `<span class="bi bi-geo-alt-fill text-primary"></span> ${weatherObj.name}`;
-                document.getElementById("dateAddress").innerHTML = `<span class="bi bi-clock-fill"></span> ${now} `;
-                
-            const iconCode = weatherObj.weather[0].icon;
-            const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+                document.getElementById("temprature").innerHTML= `${weatherObj.main.temp}&deg;`;
+                document.getElementById("temp-desc").innerHTML = `${weatherObj.weather[0].description.toUpperCase()}`;
+                document.getElementById("lblCity").innerHTML = `<span class="bi bi-geo-alt-fill"></span> ${weatherObj.name.toUpperCase()}`;
+                    
+                const iconCode = weatherObj.weather[0].icon;
+                const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
-            document.getElementById("temp-icon").innerHTML =
-                `<img className="text-warning" src="${iconUrl}" alt="Weather Icon">`;
+                document.getElementById("temp-icon").innerHTML =`<img className="text-warning" src="${iconUrl}" alt="Weather Icon">`;
 
                 document.getElementById("humidity").innerHTML = `${weatherObj.main.humidity}%`;
                 document.getElementById("wind").innerHTML =`${weatherObj.wind.speed} m/s (${weatherObj.wind.deg}°)`;
                 document.getElementById("pressure").innerHTML =`${weatherObj.main.pressure} hPa`;
+                document.getElementById("min").innerHTML = `${weatherObj.main.temp_min}&deg;`;
+                document.getElementById("max").innerHTML = `${weatherObj.main.temp_max}&deg;`;
 
             })
         }
-    </script>
-    <style>
-        body {
-  min-height: 100vh;
-  background: linear-gradient(180deg, #021e31 0%, #081e36 100%);
-  background-attachment: fixed;
-}
-    </style>
+    </script> -->
     
+
+    <script>
+        
+  const DEFAULT_CITY = "Hyderabad"; // change if you want
+
+  // Load default city on page refresh
+  window.addEventListener("load", function () {
+    getWeather(DEFAULT_CITY);
+  });
+
+  function SearchClick() {
+    const cityName = document.getElementById("txtCity").value || DEFAULT_CITY;
+    getWeather(cityName);
+  }
+
+  function getWeather(cityName) {
+    const API_URL = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=15aad834f32af2b89c51be0769b1661d&units=metric`;
+
+    fetch(API_URL)
+      .then(response => response.json())
+      .then(weatherObj => {
+
+        // ❌ If city not found, stop
+        if (weatherObj.cod !== 200) {
+          alert("City not found!");
+          return;
+        }
+
+        document.getElementById("temprature").innerHTML =
+          `${Math.round(weatherObj.main.temp)}&deg;`;
+
+        document.getElementById("temp-desc").innerHTML =
+          weatherObj.weather[0].description.toUpperCase();
+
+        document.getElementById("lblCity").innerHTML =
+          `<span class="bi bi-geo-alt-fill"></span> ${weatherObj.name.toUpperCase()}`;
+
+        const iconCode = weatherObj.weather[0].icon;
+        const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+
+        document.getElementById("temp-icon").innerHTML =
+          `<img src="${iconUrl}" alt="Weather Icon">`;
+
+        document.getElementById("humidity").innerHTML =
+          `${weatherObj.main.humidity}%`;
+
+        document.getElementById("wind").innerHTML =
+          `${weatherObj.wind.speed} m/s (${weatherObj.wind.deg}°)`;
+
+        document.getElementById("pressure").innerHTML =
+          `${weatherObj.main.pressure} hPa`;
+
+        document.getElementById("min").innerHTML =
+          `${weatherObj.main.temp_min}&deg;`;
+
+        document.getElementById("max").innerHTML =
+          `${weatherObj.main.temp_max}&deg;`;
+      })
+      .catch(error => console.error("Error:", error));
+  }
+
+
+    </script>
 </head>
 <body class="container-fluid p-2" >
     <div class="">
-        <div class="my-4 d-flex flex-column align-items-center justify-content-center">
-            <p class="h2 fw-bold mb-3 text-white bi bi-sunrise"> Your City’s Weather</p>
-            <div class="input-group w-50">
-                <input id="txtCity" type="text" class="form-control" placeholder="Enter City Name Here">
-                <button onclick="SearchClick()" class="input-group-text btn btn-danger"><span class="bi bi-search"></span> Search</button>
-            </div>
+        <div class="mt-2 d-flex flex-column align-items-center justify-content-center">
+            <p class="h2 fw-bold mb-3 text-white bi bi-sunrise m-0"> Your City’s Weather</p>
+            
         </div>
-            <div class="d-flex justify-content-center " style="height: 300px;">
-                <div class="rounded rounded-4 border p-4 w-75 bg-light d-flex justify-content-between">
-                    <div>
-                        <div class="bi bi-dot border border-1 border-primary shadow-sm rounded-pill text-center p-1" style="width: 120px;">
-                            Live Now
+            <div class=" d-flex justify-content-center align-items-center">
+                <div class="main-container rounded rounded-4 border p-4 d-flex align-items-center justify-content-center" style="width: 500px;">
+                    <div class="d-flex align-items-center justify-content-center flex-column">
+                        <div class="input-group" style="width: 400px;">
+                            <input id="txtCity" type="text" class="form-control" placeholder="Enter a city name " value="Hyderabad">
+                            <button onclick="SearchClick()" class="input-group-text btn btn-danger"><span class="bi bi-search"></span> Search</button>
                         </div>
-                        <div id="temprature" class="h1 fw-bold mt-2">
-
-                        </div>
-                        <div class="mt-5">
-                            <p id="lblCity" class="h2 fw-bold"></p>
+                        <div class="mt-2 d-flex align-items-center justify-content-center flex-column">
+                            <p id="lblCity" class="City text-black"></p>
+                            <p id="temp-desc" class="desc m-0 text-black"></p>
                             <p class="text-secondary" id="dateAddress"></p>
                         </div>
-                    </div>
-                    <div id="temp-icon">
-                        <img id="temp-icon" />
+                        <div id="temp-icon" class="d-flex align-items-center justify-content-center">
+                            <img id="temp-icon" />
+                        </div>
+                        <div class="">
+                            <p id="temprature" class="temp"></p>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center gap-3">
+                            <div>
+                               <p class="h5 text-light">min</p>
+                               <p id="min" class="minmaxall m-0"></p>
+                            </div>
+                            <p></p>
+                            <div>
+                               <p class="h5 text-light">max</p>
+                               <p id="max" class="minmaxall m-0"></p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-center mt-4">
-                <div class="d-flex justify-content-around w-75 gap-2" style="height: 130px;">
-                    <div style="background: rgba(85, 100, 139, 0.514);" class=" text-white p-3 rounded-4 d-flex flex-column justify-content-center w-100 gap-3">
-                        <p class="fs-5 fw-semibold m-0"><span class="p-2 bg-secondary rounded rounded-3 text-white bi bi-droplet-half"></span> Humidity</p>
-                        <p class="text-light" id="humidity"></p>
-                    </div>
-                    <div style="background: rgba(85, 100, 139, 0.514);" class=" text-white p-3 rounded-4 d-flex flex-column justify-content-center w-100 gap-3" >
-                        <p class="fs-5 fw-semibold m-0"><span class="p-2 bg-secondary rounded rounded-3 text-white bi bi-wind"></span> Wind</p>
-                        <p class="text-light" id="wind"></p>
-                    </div>
-                
-                    <div style="background: rgba(85, 100, 139, 0.514);" class="text-white p-3 rounded-4 d-flex flex-column justify-content-center w-100 gap-3" >
-                        <p class="fs-5 fw-semibold m-0"><span class="p-2 bg-secondary rounded rounded-3 text-white bi bi-speedometer"></span> Pressure</p>
-                        <p class="text-light" id="pressure"></p>
-                    </div>
+            <div class="d-flex justify-content-center mt-4 gap-2">
+                <div class="humi-box rounded-3 py-2 px-5 d-flex align-items-center justify-content-center flex-column">
+                    <span class=" rounded rounded-3 text-white bi bi-droplet-half"></span> 
+                    <p class="m-0 bottm-name">Humidity</p>
+                    <p class="bottm-all m-0" id="humidity"></p>
+                </div>
+                <div class="wind-box rounded-3 py-2 px-5 d-flex align-items-center justify-content-center flex-column">
+                    <span class=" rounded rounded-3 text-white bi bi-droplet-half"></span> 
+                    <p class="m-0 bottm-name">Wind</p>
+                    <p class="bottm-all m-0" id="wind"></p>
+                </div>
+                <div class="press-box rounded-3 py-2 px-5 d-flex align-items-center justify-content-center flex-column">
+                    <span class=" rounded rounded-3 text-white bi bi-droplet-half"></span> 
+                    <p class="m-0 bottm-name">Pressure</p>
+                    <p class="bottm-all m-0" id="pressure"></p>
                 </div>
             </div>
     </div>

@@ -1,0 +1,71 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html, body {
+  height: 100%;
+}
+
+body {
+  background-image: url('../public/images/img2.avif');
+  background-size: cover;
+  background-position: center;object-fit: cover;
+  background-repeat: no-repeat;
+
+}
+.main-container{
+    background: transparent;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 0 5px gray;
+}
+.City{
+    font-size: 28px;
+    font-weight: 600;
+    color: rgb(238, 233, 233);
+}
+.desc{
+    font-size: 16px;
+    font-weight: bold;
+    color: rgb(223, 218, 218);
+}
+.temp{
+    font-size: 58px;
+    font-weight: 600;
+    color: rgb(238, 233, 233);
+}
+.minmaxall{
+    color: orangered;
+    font-weight: bold;
+}
+.bottm-all{
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    font-weight: bold;
+}
+.bottm-name{
+    font-size: 18px;
+    font-weight: 600;
+    color: antiquewhite;
+}
+.humi-box{
+    background: linear-gradient(
+  135deg,
+  #ff9800,
+  #ff5722
+);
+}
+.wind-box{
+    background: linear-gradient(
+  135deg,
+  #ff4081,
+  #f50057
+);
+}
+.press-box{
+    background: linear-gradient(
+  135deg,
+  #00e5ff,
+  #2979ff
+);
+}
